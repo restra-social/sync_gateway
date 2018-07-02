@@ -460,7 +460,7 @@ func (h *handler) readJSON() (db.Body, error) {
 
 // Parses a JSON request body into a custom structure.
 func (h *handler) readJSONInto(into interface{}) error {
-	return db.ReadJSONFromMIME(h.rq.Header, h.requestBody, into)
+	return db.ReadJSONFromMIME(h.rq.Header, h.requestBody, &into)
 }
 
 // Reads & parses the request body, handling either JSON or multipart.

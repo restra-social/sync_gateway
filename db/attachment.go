@@ -233,8 +233,14 @@ func ReadJSONFromMIME(headers http.Header, input io.Reader, into interface{}) er
 		return base.HTTPErrorf(http.StatusUnsupportedMediaType, "Unsupported Content-Encoding; use gzip")
 	}
 
-	decoder := json.NewDecoder(input)
-	if err := decoder.Decode(into); err != nil {
+	body, err := ioutil.ReadAll(input)
+	if err != nil {
+		base.Warnf(base.KeyAll, "Couldn't parse Input Json from HTTP request: %v", err)
+		return base.HTTPErrorf(http.StatusBadRequest, "Bad JSON")
+	}
+	fmt.Println(string(body))
+	err = json.Unmarshal(body, into)
+	if err != nil {
 		base.Warnf(base.KeyAll, "Couldn't parse JSON in HTTP request: %v", err)
 		return base.HTTPErrorf(http.StatusBadRequest, "Bad JSON")
 	}
